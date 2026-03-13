@@ -3,12 +3,11 @@ import { prisma } from '@/lib/prisma';
 
 export const dynamic = 'force-dynamic';
 
-export async function POST(request: Request) {
+export async function POST(request) {
   try {
     const body = await request.json();
     const { name, phone } = body ?? {};
 
-    // Validation
     if (!name || !phone) {
       return NextResponse.json(
         { error: 'Пожалуйста, заполните все поля' },
@@ -16,7 +15,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Save to database
     const submission = await prisma.formSubmission.create({
       data: {
         name: String(name),
@@ -25,8 +23,7 @@ export async function POST(request: Request) {
       },
     });
 
-    // Send to Telegram
-    const telegramMessage = `🎪 *Новая заявка на экспедицию ALCHEMY: KYRGYZSTAN*\n\n👤 *Имя:* ${name}\n📞 *Телефон:* ${phone}\n🕐 *Время:* ${new Date()?.toLocaleString?.('ru-RU', { timeZone: 'Asia/Bangkok' }) ?? ''}`;
+    const telegramMessage = `🎪 *Новая заявка на экспедицию ALCHEMY: KYRGYZSTAN*\n\n👤 *Имя:* ${name}\n📞 *Телефон:* ${phone}\n🕐 *Время:* ${new Date().toLocaleString('ru-RU', { timeZone: 'Asia/Bangkok' })}`;
 
     try {
       const telegramResponse = await fetch(
@@ -47,7 +44,6 @@ export async function POST(request: Request) {
       }
     } catch (telegramError) {
       console.error('Error sending to Telegram:', telegramError);
-      // Continue even if Telegram fails - data is saved in DB
     }
 
     return NextResponse.json(
