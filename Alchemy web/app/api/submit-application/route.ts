@@ -3,8 +3,8 @@ import { prisma } from '@/lib/prisma';
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export async function POST(request: any) {
 
-export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { name, phone } = body ?? {};
