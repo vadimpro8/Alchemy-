@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma';
 
 export const dynamic = 'force-dynamic';
 
-export async function POST(request) {
+export async function POST(request: Request) {
   try {
     const body = await request.json();
     const { name, phone } = body ?? {};
@@ -23,7 +23,13 @@ export async function POST(request) {
       },
     });
 
-    const telegramMessage = `🎪 *Новая заявка на экспедицию ALCHEMY: KYRGYZSTAN*\n\n👤 *Имя:* ${name}\n📞 *Телефон:* ${phone}\n🕐 *Время:* ${new Date().toLocaleString('ru-RU', { timeZone: 'Asia/Bangkok' })}`;
+    const telegramMessage = `🎪 *Новая заявка на экспедицию ALCHEMY: KYRGYZSTAN*
+
+👤 *Имя:* ${name}
+📞 *Телефон:* ${phone}
+🕐 *Время:* ${new Date().toLocaleString('ru-RU', {
+      timeZone: 'Asia/Bangkok',
+    })}`;
 
     try {
       const telegramResponse = await fetch(
